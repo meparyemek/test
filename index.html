@@ -3,51 +3,215 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lokasyon Yoklama</title>
+  <!-- TARAYICI SEKMESİNDE GÖRÜNEN BAŞLIK BURADAN DEĞİŞTİRİLİR: -->
+  <title>Afiyet Olsun - Yemek Sistemi</title>
   <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; text-align: center; padding: 25px; background: #f0f2f5; margin: 0; }
-    .card { background: white; max-width: 400px; margin: 30px auto; padding: 30px 20px; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
-    h2 { color: #1a73e8; margin-top: 0; font-size: 22px; }
-    p { color: #555; font-size: 15px; }
-    input { width: 85%; padding: 14px; margin: 15px 0; border: 2px solid #ddd; border-radius: 10px; font-size: 18px; text-align: center; outline: none; }
+    body { 
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+      text-align: center; 
+      padding: 20px; 
+      background: #f0f2f5; 
+      margin: 0; 
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 90vh;
+    }
+    .card { 
+      background: white; 
+      width: 100%;
+      max-width: 400px; 
+      padding: 30px 20px; 
+      border-radius: 18px; 
+      box-shadow: 0 6px 20px rgba(0,0,0,0.08); 
+    }
+    .logo {
+      max-width: 140px;
+      max-height: 85px;
+      margin-bottom: 10px;
+      object-fit: contain;
+    }
+    .afiyet-baslik {
+      font-size: 28px;
+      font-weight: 800;
+      color: #d93025;
+      letter-spacing: 1px;
+      margin: 5px 0 8px 0;
+    }
+    .lokasyon-yazi { 
+      color: #1a73e8; 
+      margin-top: 0; 
+      margin-bottom: 8px;
+      font-size: 18px; 
+      font-weight: 600;
+      background: #e8f0fe;
+      padding: 8px 14px;
+      border-radius: 8px;
+      display: inline-block;
+    }
+    .tarih-kutu {
+      font-size: 15px;
+      font-weight: 600;
+      color: #3c4043;
+      background: #f8f9fa;
+      border: 1px solid #dadce0;
+      padding: 6px 12px;
+      border-radius: 6px;
+      margin: 6px auto 12px auto;
+      display: inline-block;
+    }
+    .personel-ad {
+      font-size: 19px;
+      font-weight: 700;
+      color: #202124;
+      margin: 8px 0 2px 0;
+    }
+    p { color: #555; font-size: 14px; margin: 4px 0 10px 0; }
+    input { 
+      width: 85%; 
+      padding: 14px; 
+      margin: 12px 0; 
+      border: 2px solid #ddd; 
+      border-radius: 10px; 
+      font-size: 18px; 
+      text-align: center; 
+      outline: none; 
+    }
     input:focus { border-color: #1a73e8; }
-    button { background: #1a73e8; color: white; border: none; padding: 15px; font-size: 16px; font-weight: bold; border-radius: 10px; cursor: pointer; width: 92%; }
-    .status { font-size: 18px; font-weight: bold; color: #0f9d58; margin-top: 20px; padding: 12px; background: #e6f4ea; border-radius: 8px; }
-    .warning { font-size: 16px; font-weight: bold; color: #b06000; margin-top: 20px; padding: 12px; background: #fef7e0; border-radius: 8px; }
-    .reset { margin-top: 25px; font-size: 13px; color: #888; text-decoration: underline; cursor: pointer; display: inline-block; }
+    button { 
+      background: #1a73e8; 
+      color: white; 
+      border: none; 
+      padding: 15px; 
+      font-size: 16px; 
+      font-weight: bold; 
+      border-radius: 10px; 
+      cursor: pointer; 
+      width: 92%; 
+    }
+    .btn-indir {
+      background: #0f9d58;
+      margin-top: 12px;
+      font-size: 15px;
+      padding: 12px;
+    }
+    .status { 
+      font-size: 18px; 
+      font-weight: bold; 
+      color: #0f9d58; 
+      margin-top: 15px; 
+      padding: 15px; 
+      background: #e6f4ea; 
+      border-radius: 10px; 
+    }
+    .warning { 
+      font-size: 16px; 
+      font-weight: bold; 
+      color: #b06000; 
+      margin-top: 15px; 
+      padding: 15px; 
+      background: #fef7e0; 
+      border-radius: 10px; 
+    }
+    .danger { 
+      font-size: 17px; 
+      font-weight: bold; 
+      color: #c5221f; 
+      margin-top: 15px; 
+      padding: 16px; 
+      background: #fce8e6; 
+      border: 1px solid #f6aea9;
+      border-radius: 10px; 
+    }
+    .kapanis-not {
+      font-size: 14px;
+      font-weight: 600;
+      color: #5f6368;
+      margin-top: 14px;
+    }
+    .reset { 
+      margin-top: 22px; 
+      font-size: 12px; 
+      color: #999; 
+      text-decoration: underline; 
+      cursor: pointer; 
+      display: inline-block; 
+    }
   </style>
 </head>
 <body>
   <div class="card">
-    <h2 id="lokasyonBaslik">Yükleniyor...</h2>
+    <img id="sirketLogo" class="logo" src="logo.png" alt="Logo" onerror="this.style.display='none'" />
+    
+    <div class="afiyet-baslik">AFİYET OLSUN</div>
+    <div><span class="lokasyon-yazi" id="lokasyonBaslik">Yükleniyor...</span></div>
+    <div><span class="tarih-kutu" id="tarihSaatAlani"></span></div>
 
     <div id="ilkKurulum" style="display:none;">
-      <p>İlk kullanım için telefon numaranızı bir kez kaydedin:</p>
+      <p>İlk kullanım için tanımlı telefon numaranızı girin:</p>
       <input type="tel" id="telInput" placeholder="05XX XXX XX XX" inputmode="numeric" />
-      <button onclick="kaydetVeGonder()">Kaydet ve Giriş Yap</button>
+      <button onclick="kaydetVeGonder()">Kaydet ve Gönder</button>
     </div>
 
     <div id="otomatikEkran" style="display:none;">
+      <div class="personel-ad" id="kayitliAdBilgi"></div>
       <p id="kayitliTelBilgi"></p>
-      <div class="status" id="durumMesaji">Kayıt gönderiliyor...</div>
-      <span class="reset" onclick="numaraSifirla()">Numaramı Değiştir</span>
+      <div class="status" id="durumMesaji">Yetki kontrol ediliyor...</div>
+      <button id="manuelIndirBtn" class="btn-indir" style="display:none;" onclick="sonFisiTekrarIndir()">📄 Yemek İzin Fişini İndir</button>
+      <div class="kapanis-not" id="kapanisBilgi"></div>
+      <span class="reset" onclick="numaraSifirla()">Farklı Numara Gir</span>
     </div>
   </div>
 
+  <canvas id="fisCanvas" width="600" height="780" style="display:none;"></canvas>
+
   <script>
-    // BURAYA KENDİ GOOGLE APPS SCRIPT LİNKİNİZİ YAPIŞTIRIN:
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx8oP1P1vM5lj7sAjGsVb8SdadMPTFAHTFRxgBXyw_RlM6LjlVnqg7v7bYLGgj4iYpCLQ/exec";
+    // GOOGLE APPS SCRIPT LİNKİNİZİ BURAYA YAPIŞTIRIN:
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzUNnt9EevY6YVmt2lDlcMvLIox0pOK5wkbIPa6sEQMv1dOIsgtSjbdFfvZeAuII0KuoA/exec";
 
     const urlParams = new URLSearchParams(window.location.search);
     const lokasyonAdi = urlParams.get("lokasyon") || "Genel_Lokasyon";
-    document.getElementById("lokasyonBaslik").innerText = "Lokasyon: " + lokasyonAdi.replace(/_/g, " ");
+    const temizLokasyon = lokasyonAdi.replace(/_/g, " ");
+    document.getElementById("lokasyonBaslik").innerText = temizLokasyon;
+
+    let sonFisVerisi = null;
+
+    function anlikTarihYaz() {
+      const simdi = new Date();
+      const formatli = simdi.toLocaleDateString("tr-TR") + " " + simdi.toLocaleTimeString("tr-TR");
+      document.getElementById("tarihSaatAlani").innerText = "📅 " + formatli;
+      return formatli;
+    }
+    let guncelTarih = anlikTarihYaz();
+
+    function cihazKimligiGetir() {
+      let cid = localStorage.getItem("personel_cihaz_id");
+      if (!cid) {
+        cid = "DEV-" + Date.now() + "-" + Math.random().toString(36).substring(2, 10).toUpperCase();
+        localStorage.setItem("personel_cihaz_id", cid);
+      }
+      return cid;
+    }
+
+    const sayfaYenilendiMi = (
+      (window.performance && window.performance.navigation && window.performance.navigation.type === 1) ||
+      (window.performance && window.performance.getEntriesByType("navigation")[0]?.type === "reload")
+    );
 
     window.onload = function() {
       const kayitliTel = localStorage.getItem("personel_sabit_tel");
+      const cihazId = cihazKimligiGetir();
+      
       if (kayitliTel) {
         document.getElementById("otomatikEkran").style.display = "block";
-        document.getElementById("kayitliTelBilgi").innerText = "Personel: " + kayitliTel;
-        veriyiGonder(kayitliTel);
+        document.getElementById("kayitliTelBilgi").innerText = kayitliTel;
+
+        if (sayfaYenilendiMi || sessionStorage.getItem("oturum_tamamlandi") === "evet") {
+          ekraniKilitle("✓ İşleminiz az önce tamamlandı.", "Bu sayfayı kapatabilirsiniz.");
+          return;
+        }
+
+        veriyiGonder(kayitliTel, cihazId);
       } else {
         document.getElementById("ilkKurulum").style.display = "block";
       }
@@ -61,37 +225,225 @@
         return;
       }
       const standartTel = "0" + sadeceRakam.slice(-10);
-      localStorage.setItem("personel_sabit_tel", standartTel);
+      const cihazId = cihazKimligiGetir();
       
       document.getElementById("ilkKurulum").style.display = "none";
       document.getElementById("otomatikEkran").style.display = "block";
-      document.getElementById("kayitliTelBilgi").innerText = "Personel: " + standartTel;
-      veriyiGonder(standartTel);
+      document.getElementById("kayitliTelBilgi").innerText = standartTel;
+      veriyiGonder(standartTel, cihazId);
     }
 
-    function veriyiGonder(telefon) {
+    function veriyiGonder(telefon, cihazId) {
       const mesajKutusu = document.getElementById("durumMesaji");
-      const istekUrl = `${SCRIPT_URL}?lokasyon=${encodeURIComponent(lokasyonAdi)}&telefon=${encodeURIComponent(telefon)}`;
+      const callbackAdi = "jsonpCallback_" + Math.floor(Math.random() * 1000000);
+      
+      const zamanAsimi = setTimeout(function() {
+        mesajKutusu.className = "warning";
+        mesajKutusu.innerText = "Sunucu yanıt vermedi. İnternetinizi kontrol edin.";
+      }, 10000);
 
-      fetch(istekUrl)
-        .then(response => response.json())
-        .then(data => {
-          if (data.durum === "OK") {
-            mesajKutusu.className = "status";
-            mesajKutusu.innerText = "✓ " + data.mesaj;
-          } else {
-            mesajKutusu.className = "warning";
-            mesajKutusu.innerText = "⚠ " + data.mesaj;
-          }
-        })
-        .catch(() => {
+      window[callbackAdi] = function(data) {
+        clearTimeout(zamanAsimi);
+
+        if (data.tarih) {
+          guncelTarih = data.tarih;
+          document.getElementById("tarihSaatAlani").innerText = "📅 " + data.tarih;
+        }
+        if (data.adSoyad) {
+          document.getElementById("kayitliAdBilgi").innerText = data.adSoyad;
+        }
+
+        if (data.durum === "OK") {
+          localStorage.setItem("personel_sabit_tel", telefon);
+          sessionStorage.setItem("oturum_tamamlandi", "evet");
+          
+          sonFisVerisi = {
+            adSoyad: data.adSoyad || "Personel",
+            telefon: telefon,
+            lokasyon: temizLokasyon,
+            tarih: guncelTarih
+          };
+
+          ekraniKilitle("✓ " + data.mesaj, "");
+          document.getElementById("manuelIndirBtn").style.display = "inline-block";
+
+          // Fişi oluştur, indir ve 3 saniyelik kapanış sayacını başlat
+          yemekIzinFisiOlusturVeIndir(sonFisVerisi);
+          ucSaniyeGeriSayimVeKapat();
+        } 
+        else if (data.durum === "YETKISIZ") {
+          localStorage.removeItem("personel_sabit_tel");
+          mesajKutusu.className = "danger";
+          mesajKutusu.innerText = "⛔ " + data.mesaj;
+          document.getElementById("kapanisBilgi").innerText = "Yetkisiz veya farklı cihaz girişi engellendi.";
+        } 
+        else {
+          sessionStorage.setItem("oturum_tamamlandi", "evet");
           mesajKutusu.className = "warning";
-          mesajKutusu.innerText = "Bağlantı hatası! İnternetinizi kontrol edip sayfayı yenileyin.";
-        });
+          mesajKutusu.innerText = "⚠ " + data.mesaj;
+          document.getElementById("kapanisBilgi").innerText = "Günlük yemek hakkınız dolmuştur.";
+        }
+
+        delete window[callbackAdi];
+        document.body.removeChild(script);
+      };
+
+      const script = document.createElement("script");
+      script.src = `${SCRIPT_URL}?lokasyon=${encodeURIComponent(lokasyonAdi)}&telefon=${encodeURIComponent(telefon)}&cihazId=${encodeURIComponent(cihazId)}&callback=${callbackAdi}`;
+      script.onerror = function() {
+        clearTimeout(zamanAsimi);
+        mesajKutusu.className = "warning";
+        mesajKutusu.innerText = "Bağlantı hatası! Google Script linkini kontrol edin.";
+      };
+      document.body.appendChild(script);
+    }
+
+    // Yemek İzin Fişi (En üstte Logo, altında AFİYET OLSUN)
+    function yemekIzinFisiOlusturVeIndir(bilgi) {
+      const canvas = document.getElementById("fisCanvas");
+      const ctx = canvas.getContext("2d");
+
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Dış Çerçeve
+      ctx.strokeStyle = "#1a73e8";
+      ctx.lineWidth = 8;
+      ctx.strokeRect(20, 20, canvas.width - 40, canvas.height - 40);
+
+      const cizimiTamamla = function(logoVarMi, logoImg) {
+        let yPos = 55;
+        ctx.textAlign = "center";
+
+        // 1. EN ÜSTTE LOGO
+        if (logoVarMi && logoImg) {
+          const oran = Math.min(200 / logoImg.width, 100 / logoImg.height);
+          const w = logoImg.width * oran;
+          const h = logoImg.height * oran;
+          ctx.drawImage(logoImg, (canvas.width - w) / 2, yPos, w, h);
+          yPos += h + 45;
+        } else {
+          yPos += 35;
+        }
+
+        // 2. LOGONUN HEMEN ALTINDA AFİYET OLSUN BAŞLIĞI
+        ctx.fillStyle = "#d93025";
+        ctx.font = "bold 44px Arial, sans-serif";
+        ctx.fillText("AFİYET OLSUN", canvas.width / 2, yPos);
+        yPos += 34;
+
+        // Onay Rozeti
+        ctx.fillStyle = "#0f9d58";
+        ctx.font = "bold 20px Arial, sans-serif";
+        ctx.fillText("✓ ONAYLI YEMEK İZİN FİŞİ", canvas.width / 2, yPos);
+        yPos += 25;
+
+        // Ayırıcı Çizgi
+        ctx.strokeStyle = "#dadce0";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(60, yPos);
+        ctx.lineTo(canvas.width - 60, yPos);
+        ctx.stroke();
+        yPos += 48;
+
+        // Personel Ad Soyad
+        ctx.fillStyle = "#5f6368";
+        ctx.font = "bold 18px Arial, sans-serif";
+        ctx.fillText("PERSONEL ADI SOYADI", canvas.width / 2, yPos);
+        yPos += 34;
+        ctx.fillStyle = "#202124";
+        ctx.font = "bold 30px Arial, sans-serif";
+        ctx.fillText(bilgi.adSoyad.toUpperCase(), canvas.width / 2, yPos);
+        yPos += 52;
+
+        // Telefon Numarası
+        ctx.fillStyle = "#5f6368";
+        ctx.font = "bold 18px Arial, sans-serif";
+        ctx.fillText("İLETİŞİM NUMARASI", canvas.width / 2, yPos);
+        yPos += 32;
+        ctx.fillStyle = "#202124";
+        ctx.font = "bold 26px Arial, sans-serif";
+        ctx.fillText(bilgi.telefon, canvas.width / 2, yPos);
+        yPos += 52;
+
+        // Lokasyon
+        ctx.fillStyle = "#5f6368";
+        ctx.font = "bold 18px Arial, sans-serif";
+        ctx.fillText("LOKASYON", canvas.width / 2, yPos);
+        yPos += 32;
+        ctx.fillStyle = "#1a73e8";
+        ctx.font = "bold 26px Arial, sans-serif";
+        ctx.fillText(bilgi.lokasyon, canvas.width / 2, yPos);
+        yPos += 52;
+
+        // Tarih ve Saat
+        ctx.fillStyle = "#5f6368";
+        ctx.font = "bold 18px Arial, sans-serif";
+        ctx.fillText("TARİH VE SAAT", canvas.width / 2, yPos);
+        yPos += 32;
+        ctx.fillStyle = "#202124";
+        ctx.font = "bold 26px Arial, sans-serif";
+        ctx.fillText(bilgi.tarih, canvas.width / 2, yPos);
+
+        // Alt Not
+        ctx.fillStyle = "#80868b";
+        ctx.font = "italic 15px Arial, sans-serif";
+        ctx.fillText("Günlük tek öğün yemek hakkı için dijital olarak üretilmiştir.", canvas.width / 2, canvas.height - 40);
+
+        const link = document.createElement("a");
+        const dosyaTarih = bilgi.tarih.replace(/[:.\s]/g, "-");
+        link.download = `Yemek_Izin_Fisi_${dosyaTarih}.png`;
+        link.href = canvas.toDataURL("image/png");
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      };
+
+      const logoImg = new Image();
+      logoImg.crossOrigin = "anonymous";
+      logoImg.onload = function() { cizimiTamamla(true, logoImg); };
+      logoImg.onerror = function() { cizimiTamamla(false, null); };
+      logoImg.src = "logo.png";
+    }
+
+    function sonFisiTekrarIndir() {
+      if (sonFisVerisi) {
+        yemekIzinFisiOlusturVeIndir(sonFisVerisi);
+      }
+    }
+
+    // 3 saniye geri sayım yapar ve sekmeyi kapatır
+    function ucSaniyeGeriSayimVeKapat() {
+      let kalan = 3;
+      const kapanisAlani = document.getElementById("kapanisBilgi");
+      kapanisAlani.innerText = "Sayfa " + kalan + " saniye içinde kapanacak...";
+
+      const sayac = setInterval(function() {
+        kalan--;
+        if (kalan > 0) {
+          kapanisAlani.innerText = "Sayfa " + kalan + " saniye içinde kapanacak...";
+        } else {
+          clearInterval(sayac);
+          kapanisAlani.innerText = "Kapatılıyor...";
+          window.close();
+          setTimeout(function() {
+            document.body.innerHTML = "<div style='font-family:sans-serif;text-align:center;padding:50px;'><h2>✓ Yemek İzin Fişiniz İndirildi</h2><p>Bu sekmeyi kapatabilirsiniz.</p></div>";
+          }, 300);
+        }
+      }, 1000);
+    }
+
+    function ekraniKilitle(anaMesaj, altNot) {
+      const mesajKutusu = document.getElementById("durumMesaji");
+      mesajKutusu.className = "status";
+      mesajKutusu.innerText = anaMesaj;
+      document.getElementById("kapanisBilgi").innerText = altNot;
     }
 
     function numaraSifirla() {
       localStorage.removeItem("personel_sabit_tel");
+      sessionStorage.removeItem("oturum_tamamlandi");
       location.reload();
     }
   </script>

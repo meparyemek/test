@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lokasyon Yoklama</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; text-align: center; padding: 25px; background: #f0f2f5; margin: 0; }
+    .card { background: white; max-width: 400px; margin: 30px auto; padding: 30px 20px; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
+    h2 { color: #1a73e8; margin-top: 0; font-size: 22px; }
+    p { color: #555; font-size: 15px; }
+    input { width: 85%; padding: 14px; margin: 15px 0; border: 2px solid #ddd; border-radius: 10px; font-size: 18px; text-align: center; outline: none; }
+    input:focus { border-color: #1a73e8; }
+    button { background: #1a73e8; color: white; border: none; padding: 15px; font-size: 16px; font-weight: bold; border-radius: 10px; cursor: pointer; width: 92%; }
+    .status { font-size: 18px; font-weight: bold; color: #0f9d58; margin-top: 20px; padding: 12px; background: #e6f4ea; border-radius: 8px; }
+    .warning { font-size: 16px; font-weight: bold; color: #b06000; margin-top: 20px; padding: 12px; background: #fef7e0; border-radius: 8px; }
+    .reset { margin-top: 25px; font-size: 13px; color: #888; text-decoration: underline; cursor: pointer; display: inline-block; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2 id="lokasyonBaslik">Yükleniyor...</h2>
+
+    <div id="ilkKurulum" style="display:none;">
+      <p>İlk kullanım için telefon numaranızı bir kez kaydedin:</p>
+      <input type="tel" id="telInput" placeholder="05XX XXX XX XX" inputmode="numeric" />
+      <button onclick="kaydetVeGonder()">Kaydet ve Giriş Yap</button>
+    </div>
+
+    <div id="otomatikEkran" style="display:none;">
+      <p id="kayitliTelBilgi"></p>
+      <div class="status" id="durumMesaji">Kayıt gönderiliyor...</div>
+      <span class="reset" onclick="numaraSifirla()">Numaramı Değiştir</span>
+    </div>
+  </div>
+
+  <script>
+    // BURAYA KENDİ GOOGLE APPS SCRIPT LİNKİNİZİ YAPIŞTIRIN:
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx8oP1P1vM5lj7sAjGsVb8SdadMPTFAHTFRxgBXyw_RlM6LjlVnqg7v7bYLGgj4iYpCLQ/exec";
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const lokasyonAdi = urlParams.get("lokasyon") || "Genel_Lokasyon";
+    document.getElementById("lokasyonBaslik").innerText = "Lokasyon: " + lokasyonAdi.replace(/_/g, " ");
+
+    window.onload = function() {
+      const kayitliTel = localStorage.getItem("personel_sabit_tel");
+      if (kayitliTel) {
+        document.getElementById("otomatikEkran").style.display = "block";
+        document.getElementById("kayitliTelBilgi").innerText = "Personel: " + kayitliTel;
+        veriyiGonder(kayitliTel);
+      } else {
+        document.getElementById("ilkKurulum").style.display = "block";
+      }
+    };
+
+    function kaydetVeGonder() {
+      const hamGirilen = document.getElementById("telInput").value.trim();
+      const sadeceRakam = hamGirilen.replace(/\D/g, "");
+      if (sadeceRakam.length < 10) {
+        alert("Lütfen başında 0 olacak şekilde 11 haneli telefon numaranızı girin (Örn: 05551234567).");
+        return;
+      }
+      const standartTel = "0" + sadeceRakam.slice(-10);
+      localStorage.setItem("personel_sabit_tel", standartTel);
+      
+      document.getElementById("ilkKurulum").style.display = "none";
+      document.getElementById("otomatikEkran").style.display = "block";
+      document.getElementById("kayitliTelBilgi").innerText = "Personel: " + standartTel;
+      veriyiGonder(standartTel);
+    }
+
+    function veriyiGonder(telefon) {
+      const mesajKutusu = document.getElementById("durumMesaji");
+      const istekUrl = `${SCRIPT_URL}?lokasyon=${encodeURIComponent(lokasyonAdi)}&telefon=${encodeURIComponent(telefon)}`;
+
+      fetch(istekUrl)
+        .then(response => response.json())
+        .then(data => {
+          if (data.durum === "OK") {
+            mesajKutusu.className = "status";
+            mesajKutusu.innerText = "✓ " + data.mesaj;
+          } else {
+            mesajKutusu.className = "warning";
+            mesajKutusu.innerText = "⚠ " + data.mesaj;
+          }
+        })
+        .catch(() => {
+          mesajKutusu.className = "warning";
+          mesajKutusu.innerText = "Bağlantı hatası! İnternetinizi kontrol edip sayfayı yenileyin.";
+        });
+    }
+
+    function numaraSifirla() {
+      localStorage.removeItem("personel_sabit_tel");
+      location.reload();
+    }
+  </script>
+</body>
+</html>
